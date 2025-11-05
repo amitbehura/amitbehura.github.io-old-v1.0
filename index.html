@@ -22,6 +22,25 @@
         <div class="profile-block">
             <img src="profile_picture.png" alt="My Photo" class="profile-img" id="music-image">
             <p class="profile-caption">“Tap me, and let your ears thank you later.” - Amit</p>
+            <div class="music-player" role="region" aria-label="Music player">
+              <div class="music-meta">
+                <p class="music-title">Now Playing</p>
+                <p class="music-track">Come Play – Instrumental</p>
+              </div>
+              <div class="music-controls">
+                <button type="button" class="player-button" id="play-pause" aria-label="Play" aria-pressed="false">
+                  <i class="fa-solid fa-play"></i>
+                </button>
+                <div class="progress-wrapper">
+                  <span id="current-time" class="time-label">0:00</span>
+                  <input type="range" id="progress" class="progress-bar" min="0" max="100" value="0" aria-label="Track progress">
+                  <span id="duration" class="time-label">0:00</span>
+                </div>
+                <button type="button" class="player-button" id="mute-toggle" aria-label="Mute" aria-pressed="false">
+                  <i class="fa-solid fa-volume-high"></i>
+                </button>
+              </div>
+            </div>
             <audio id="music-audio" src="come_play.mp3"></audio>
         </div>
       </div>
@@ -60,25 +79,92 @@
   <script>
     const image = document.getElementById("music-image");
     const audio = document.getElementById("music-audio");
-  
-    let isPlaying = false;
-  
-    image.addEventListener("click", () => {
-      if (!isPlaying) {
-        audio.play();
+    const playPauseBtn = document.getElementById("play-pause");
+    const muteToggleBtn = document.getElementById("mute-toggle");
+    const progressBar = document.getElementById("progress");
+    const currentTimeLabel = document.getElementById("current-time");
+    const durationLabel = document.getElementById("duration");
+
+    const setPlayButton = (playing) => {
+      playPauseBtn.innerHTML = playing ? '<i class="fa-solid fa-pause"></i>' : '<i class="fa-solid fa-play"></i>';
+      playPauseBtn.setAttribute("aria-label", playing ? "Pause" : "Play");
+      playPauseBtn.setAttribute("aria-pressed", playing);
+    };
+
+    const setMuteButton = (muted) => {
+      muteToggleBtn.innerHTML = muted ? '<i class="fa-solid fa-volume-xmark"></i>' : '<i class="fa-solid fa-volume-high"></i>';
+      muteToggleBtn.setAttribute("aria-label", muted ? "Unmute" : "Mute");
+      muteToggleBtn.setAttribute("aria-pressed", muted);
+    };
+
+    const formatTime = (seconds) => {
+      if (!Number.isFinite(seconds)) return "0:00";
+      const wholeSeconds = Math.max(0, Math.floor(seconds));
+      const mins = Math.floor(wholeSeconds / 60);
+      const secs = wholeSeconds % 60;
+      return `${mins}:${secs.toString().padStart(2, "0")}`;
+    };
+
+    const syncPlaybackUI = () => {
+      setPlayButton(!audio.paused && !audio.ended);
+      if (!audio.paused && !audio.ended) {
         image.classList.add("rotate");
-        isPlaying = true;
+      } else {
+        image.classList.remove("rotate");
+      }
+    };
+
+    image.addEventListener("click", () => {
+      if (audio.paused) {
+        audio.play();
       } else {
         audio.pause();
-        image.classList.remove("rotate");
-        isPlaying = false;
       }
     });
-  
+
+    playPauseBtn.addEventListener("click", () => {
+      if (audio.paused) {
+        audio.play();
+      } else {
+        audio.pause();
+      }
+    });
+
+    muteToggleBtn.addEventListener("click", () => {
+      audio.muted = !audio.muted;
+      setMuteButton(audio.muted);
+    });
+
+    progressBar.addEventListener("input", (event) => {
+      if (audio.duration) {
+        audio.currentTime = Number(event.target.value);
+      }
+    });
+
+    audio.addEventListener("loadedmetadata", () => {
+      progressBar.max = Math.floor(audio.duration);
+      durationLabel.textContent = formatTime(audio.duration);
+    });
+
+    audio.addEventListener("timeupdate", () => {
+      progressBar.value = Math.floor(audio.currentTime);
+      currentTimeLabel.textContent = formatTime(audio.currentTime);
+    });
+
+    audio.addEventListener("play", syncPlaybackUI);
+    audio.addEventListener("pause", syncPlaybackUI);
+    audio.addEventListener("volumechange", () => setMuteButton(audio.muted));
+
     audio.addEventListener("ended", () => {
       image.classList.remove("rotate");
-      isPlaying = false;
+      setPlayButton(false);
+      progressBar.value = 0;
+      currentTimeLabel.textContent = "0:00";
     });
+
+    setPlayButton(false);
+    setMuteButton(false);
+    currentTimeLabel.textContent = "0:00";
 
     const logo = document.getElementById("logo");
 const cloudText = document.getElementById("cloud-text");
