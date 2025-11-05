@@ -120,6 +120,109 @@ html, body {
   color: #333333;
 }
 
+.music-player {
+  margin-top: 25px;
+  padding: 18px 20px;
+  border-radius: 20px;
+  background: linear-gradient(135deg, rgba(47, 47, 47, 0.92), rgba(14, 29, 37, 0.92));
+  color: #fde2e4;
+  box-shadow: 0 15px 35px rgba(14, 29, 37, 0.25);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.music-meta {
+  text-align: left;
+}
+
+.music-title {
+  font-size: 0.85rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin: 0 0 5px 0;
+  color: rgba(253, 226, 228, 0.75);
+}
+
+.music-track {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.music-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.player-button {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: none;
+  background: #fde2e4;
+  color: #0e1d25;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.player-button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 20px rgba(253, 226, 228, 0.35);
+}
+
+.progress-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+}
+
+.time-label {
+  font-size: 0.75rem;
+  min-width: 36px;
+  text-align: center;
+  color: rgba(253, 226, 228, 0.8);
+}
+
+.progress-bar {
+  flex: 1;
+  appearance: none;
+  height: 6px;
+  border-radius: 999px;
+  background: rgba(253, 226, 228, 0.25);
+  outline: none;
+  cursor: pointer;
+}
+
+.progress-bar::-webkit-slider-thumb {
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #fde2e4;
+  border: 2px solid #0e1d25;
+  box-shadow: 0 0 0 4px rgba(253, 226, 228, 0.35);
+}
+
+.progress-bar::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #fde2e4;
+  border: 2px solid #0e1d25;
+  box-shadow: 0 0 0 4px rgba(253, 226, 228, 0.35);
+}
+
+.progress-bar:focus-visible {
+  outline: 2px solid #fde2e4;
+  outline-offset: 3px;
+}
+
 
 .right-panel {
   width: 60%;
@@ -208,6 +311,19 @@ html, body {
     margin: 0 auto;
     padding-top: 0;
     text-align: center;
+  }
+
+  .music-player {
+    margin-top: 20px;
+  }
+
+  .music-controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .progress-wrapper {
+    width: 100%;
   }
 
   .profile-img {
